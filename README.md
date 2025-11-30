@@ -73,7 +73,7 @@ All of these plans should be created in a folder called /dev/active/[plan-name] 
 
 We need to create the following implementation plans (each plan needs good planinng on how to implement this in the frontend side and also the backend side):
 0. Setup the frontend structure
-1. Login and register pages
+1. Login and register pages. The authentication system should be like this -> the backend stores sessions and we manage them, these sessions should be stored in http only cookies, and each time we get a reqeust and the current session i close to the expiration date then we refres the session for the user.
 2. Create the home page, which should have cards or something to lead the user to each site: monthly budget, investments, loans, netwroth and then we need a settings page where we can add new members and manage current members.
 3. Create the monthly budget planner page, with all the requirements from the system explainnation above.
 TBA

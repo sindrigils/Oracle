@@ -3,7 +3,7 @@ from db.base import Base
 from sqlalchemy.orm import relationship
 from passlib.context import CryptContext
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 
 
 class User(Base):

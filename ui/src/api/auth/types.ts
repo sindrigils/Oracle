@@ -9,8 +9,14 @@ export interface RegisterRequest {
   password: string;
 }
 
+export interface UserResponse {
+  id: number;
+  username: string;
+  email: string;
+}
+
 export interface LoginResponse {
-  token: string;
+  user: UserResponse;
 }
 
 export interface RegisterResponse {
@@ -19,4 +25,8 @@ export interface RegisterResponse {
 
 export interface LogoutResponse {
   success: boolean;
+}
+
+export interface WhoAmIResponse {
+  user: UserResponse | null;
 }

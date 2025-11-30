@@ -6,8 +6,17 @@ class LoginRequest(BaseModel):
     password: str
 
 
+class UserResponse(BaseModel):
+    id: int
+    username: str
+    email: str
+
+    class Config:
+        from_attributes = True
+
+
 class LoginResponse(BaseModel):
-    token: str
+    user: UserResponse
 
 
 class RegisterRequest(BaseModel):
@@ -22,3 +31,7 @@ class RegisterResponse(BaseModel):
 
 class LogoutResponse(BaseModel):
     success: bool
+
+
+class WhoAmIResponse(BaseModel):
+    user: UserResponse | None

@@ -1,4 +1,4 @@
-import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
+import axios, { AxiosError } from 'axios';
 import { env } from './env';
 
 export const apiClient = axios.create({
@@ -7,29 +7,17 @@ export const apiClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true,
+  withCredentials: true, // Required for cookies to be sent/received
 });
-
-apiClient.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
-    const token = typeof window !== 'undefined'
-      ? localStorage.getItem('auth_token')
-      : null;
-
-    if (token && config.headers) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error: AxiosError) => Promise.reject(error)
-);
 
 apiClient.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
-    if (error.response?.status === 401) {
+    // Don't redirect for /auth/me - it's expected to return null when not authenticated
+    const isAuthMeRequest = error.config?.url?.includes('/auth/me');
+
+    if (error.response?.status === 401 && !isAuthMeRequest) {
       if (typeof window !== 'undefined') {
-        localStorage.removeItem('auth_token');
         window.location.href = '/login';
       }
     }

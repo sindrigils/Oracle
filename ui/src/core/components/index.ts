@@ -16,3 +16,4 @@ export { ErrorState } from './ui/error-state';
 
 // Layout Components
 export { Footer } from './layout/footer';
+export { Header } from './layout/header';

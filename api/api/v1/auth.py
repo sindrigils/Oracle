@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from starlette.status import HTTP_401_UNAUTHORIZED
 
-from api.dependencies import get_current_session
+from api.dependencies import get_current_session, get_session_from_cookie_optional
 from services.user import UserService, get_user_service
 from services.session import SessionService, get_session_service
 from schemas.auth import (
@@ -10,16 +10,45 @@ from schemas.auth import (
     RegisterRequest,
     RegisterResponse,
     LogoutResponse,
+    UserResponse,
+    WhoAmIResponse,
 )
 from models.session import Session as SessionModel
+from core.config import settings
 
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 
+def set_session_cookie(response: Response, token: str) -> None:
+    """Set the session token as an HTTP-only cookie."""
+    response.set_cookie(
+        key=settings.session_cookie_name,
+        value=token,
+        max_age=settings.session_token_expiration_time,
+        httponly=True,
+        secure=settings.cookie_secure,
+        samesite=settings.cookie_samesite,
+        domain=settings.cookie_domain,
+    )
+
+
+def clear_session_cookie(response: Response) -> None:
+    """Clear the session cookie."""
+    response.delete_cookie(
+        key=settings.session_cookie_name,
+        httponly=True,
+        secure=settings.cookie_secure,
+        samesite=settings.cookie_samesite,
+        domain=settings.cookie_domain,
+    )
+
+
 @router.post("/login", response_model=LoginResponse)
 async def login(
     request: LoginRequest,
+    response: Response,
+    fastapi_request: Request,
     user_service: UserService = Depends(get_user_service),
     session_service: SessionService = Depends(get_session_service),
 ):
@@ -30,8 +59,14 @@ async def login(
         raise HTTPException(
             status_code=HTTP_401_UNAUTHORIZED, detail="Invalid credentials"
         )
-    session = session_service.create_session(user.id)
-    return LoginResponse(token=session.token)
+
+    user_agent = fastapi_request.headers.get("user-agent", "")
+    ip_address = fastapi_request.client.host if fastapi_request.client else ""
+
+    token = session_service.create_session(user.id, user_agent, ip_address)
+    set_session_cookie(response, token)
+
+    return LoginResponse(user=UserResponse.model_validate(user))
 
 
 @router.post("/register", response_model=RegisterResponse)
@@ -45,8 +80,19 @@ async def register(
 
 @router.post("/logout", response_model=LogoutResponse)
 async def logout(
+    response: Response,
     session: SessionModel = Depends(get_current_session),
     session_service: SessionService = Depends(get_session_service),
 ):
     session_service.delete_session(session.token)
+    clear_session_cookie(response)
     return LogoutResponse(success=True)
+
+
+@router.get("/whoami", response_model=WhoAmIResponse)
+async def whoami(
+    session: SessionModel | None = Depends(get_session_from_cookie_optional),
+):
+    if session is None:
+        return WhoAmIResponse(user=None)
+    return WhoAmIResponse(user=UserResponse.model_validate(session.user))

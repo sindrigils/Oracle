@@ -1,5 +1,4 @@
-from fastapi import Depends, HTTPException
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi import Depends, HTTPException, Request
 from starlette.status import HTTP_401_UNAUTHORIZED, HTTP_403_FORBIDDEN
 from sqlalchemy.orm import Session
 
@@ -9,16 +8,30 @@ from models.household import Household
 from models.member import Member
 from models.session import Session as SessionModel
 from services.session import SessionService, get_session_service
+from core.config import settings
 
-security = HTTPBearer()
+
+def get_session_from_cookie_optional(
+    request: Request,
+    session_service: SessionService = Depends(get_session_service),
+) -> SessionModel | None:
+    """Get session from cookie if present and valid, otherwise return None."""
+    token = request.cookies.get(settings.session_cookie_name)
+    if not token:
+        return None
+    return session_service.get_valid_session(token)
 
 
 def get_current_session(
-    credentials: HTTPAuthorizationCredentials = Depends(security),
+    request: Request,
     session_service: SessionService = Depends(get_session_service),
 ) -> SessionModel:
-    """Get the current valid session from the token."""
-    token = credentials.credentials
+    token = request.cookies.get(settings.session_cookie_name)
+    if not token:
+        raise HTTPException(
+            status_code=HTTP_401_UNAUTHORIZED, detail="Not authenticated"
+        )
+
     session = session_service.get_valid_session(token)
     if not session:
         raise HTTPException(

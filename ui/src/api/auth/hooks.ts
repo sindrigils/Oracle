@@ -1,7 +1,19 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { authApi } from "./requests";
 import { queryKeys } from "@/lib/react-query";
-import type { LoginRequest, RegisterRequest } from "./types";
+import type { LoginRequest, RegisterRequest, UserResponse } from "./types";
+
+export function useWhoami() {
+  return useQuery({
+    queryKey: queryKeys.auth.user(),
+    queryFn: async (): Promise<UserResponse | null> => {
+      const response = await authApi.whoami();
+      return response.user;
+    },
+    retry: false,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
+}
 
 export function useLogin() {
   const queryClient = useQueryClient();
@@ -9,8 +21,8 @@ export function useLogin() {
   return useMutation({
     mutationFn: (data: LoginRequest) => authApi.login(data),
     onSuccess: (data) => {
-      localStorage.setItem("auth_token", data.token);
-      queryClient.invalidateQueries({ queryKey: queryKeys.auth.all });
+      // Update the user cache directly with the returned user
+      queryClient.setQueryData(queryKeys.auth.user(), data.user);
     },
   });
 }
@@ -27,7 +39,7 @@ export function useLogout() {
   return useMutation({
     mutationFn: () => authApi.logout(),
     onSuccess: () => {
-      localStorage.removeItem("auth_token");
+      // Clear all cached data on logout
       queryClient.clear();
     },
   });

@@ -14,8 +14,8 @@ class SessionService:
     def create_session(
         self,
         user_id: int,
-        user_agent: str,
-        ip_address: str,
+        user_agent: str = "",
+        ip_address: str = "",
     ) -> str:
         token = self.create_token()
         expires_at = datetime.now() + timedelta(
@@ -43,6 +43,20 @@ class SessionService:
         if not session or session.expires_at < datetime.now():
             return None
         return session
+
+    def refresh_session(self, session: SessionModel) -> None:
+        """Extend the session expiration time."""
+        session.expires_at = datetime.now() + timedelta(
+            seconds=settings.session_token_expiration_time
+        )
+        self.db.commit()
+
+    def should_refresh_session(self, session: SessionModel) -> bool:
+        """Check if session is within the refresh threshold of expiring."""
+        threshold = datetime.now() + timedelta(
+            seconds=settings.session_refresh_threshold
+        )
+        return session.expires_at < threshold
 
     def delete_session(self, token: str) -> None:
         session = (
