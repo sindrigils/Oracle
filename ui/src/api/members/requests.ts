@@ -1,16 +1,16 @@
-import { apiClient } from "@/lib/axios";
+import { apiClient } from '@/lib/axios';
 import type {
   CreateMemberRequest,
   CreateMemberResponse,
-  GetMembersResponse,
   DeleteMemberResponse,
+  GetMembersResponse,
   UpdateMemberRequest,
-} from "./types";
+} from './types';
 
 export const membersApi = {
   getMembers: async (householdId: number): Promise<GetMembersResponse> => {
-    const response = await apiClient.get<GetMembersResponse>("/members", {
-      params: { household_id: householdId },
+    const response = await apiClient.get<GetMembersResponse>('/members', {
+      params: { householdId },
     });
     return response.data;
   },
@@ -19,7 +19,7 @@ export const membersApi = {
     data: CreateMemberRequest
   ): Promise<CreateMemberResponse> => {
     const response = await apiClient.post<CreateMemberResponse>(
-      "/members/",
+      '/members/',
       data
     );
     return response.data;

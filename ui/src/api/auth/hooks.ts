@@ -1,14 +1,13 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { authApi } from "./requests";
-import { queryKeys } from "@/lib/react-query";
-import type { LoginRequest, RegisterRequest, UserResponse } from "./types";
+import { queryKeys } from '@/lib/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { authApi } from './requests';
+import type { LoginRequest, RegisterRequest, WhoAmIResponse } from './types';
 
 export function useWhoami() {
   return useQuery({
     queryKey: queryKeys.auth.user(),
-    queryFn: async (): Promise<UserResponse | null> => {
-      const response = await authApi.whoami();
-      return response.user;
+    queryFn: async (): Promise<WhoAmIResponse> => {
+      return await authApi.whoami();
     },
     retry: false,
     staleTime: 1000 * 60 * 5, // 5 minutes
@@ -20,9 +19,8 @@ export function useLogin() {
 
   return useMutation({
     mutationFn: (data: LoginRequest) => authApi.login(data),
-    onSuccess: (data) => {
-      // Update the user cache directly with the returned user
-      queryClient.setQueryData(queryKeys.auth.user(), data.user);
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.auth.user() });
     },
   });
 }

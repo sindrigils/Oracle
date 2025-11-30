@@ -1,11 +1,12 @@
-"use client";
+'use client';
 
-import { createContext, useContext, ReactNode } from "react";
-import { useWhoami, useLogin, useLogout } from "./hooks";
-import type { UserResponse, LoginRequest } from "./types";
+import { createContext, ReactNode, useContext } from 'react';
+import { useLogin, useLogout, useWhoami } from './hooks';
+import type { HouseholdResponse, LoginRequest, UserResponse } from './types';
 
 interface AuthContextValue {
   user: UserResponse | null | undefined;
+  household: HouseholdResponse | null | undefined;
   isLoading: boolean;
   isAuthenticated: boolean;
   login: (data: LoginRequest) => Promise<void>;
@@ -23,7 +24,7 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const { data: user, isLoading } = useWhoami();
+  const { data: whoamiData, isLoading } = useWhoami();
   const loginMutation = useLogin();
   const logoutMutation = useLogout();
 
@@ -36,9 +37,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   const value: AuthContextValue = {
-    user,
+    user: whoamiData?.user ?? null,
+    household: whoamiData?.household ?? null,
     isLoading,
-    isAuthenticated: !!user,
+    isAuthenticated: Boolean(whoamiData?.user),
     login,
     logout,
     loginError: loginMutation.error,
@@ -53,7 +55,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 export function useAuth(): AuthContextValue {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 }

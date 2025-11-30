@@ -1,5 +1,5 @@
-from pydantic import BaseModel
 from models.member import Member
+from pydantic import BaseModel
 
 
 class CreateMemberRequest(BaseModel):
@@ -14,3 +14,7 @@ class CreateMemberResponse(BaseModel):
 
 class GetMembersResponse(BaseModel):
     members: list[Member]
+
+
+class DeleteMemberResponse(BaseModel):
+    success: bool

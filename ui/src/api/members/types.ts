@@ -1,14 +1,14 @@
-import type { Member } from "@/types/global";
+import type { Member } from '@/types/global';
 
 export interface CreateMemberRequest {
   name: string;
-  image_url?: string;
-  household_id: number;
+  imageUrl?: string;
+  householdId: number;
 }
 
 export interface UpdateMemberRequest {
   name?: string;
-  image_url?: string;
+  imageUrl?: string;
 }
 
 export interface GetMembersResponse {

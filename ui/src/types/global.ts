@@ -1,7 +1,7 @@
 export interface BaseEntity {
   id: number;
-  created_at?: string;
-  updated_at?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface User extends BaseEntity {
@@ -11,14 +11,14 @@ export interface User extends BaseEntity {
 
 export interface Member extends BaseEntity {
   name: string;
-  image_url: string;
-  household_id: number;
-  is_primary?: boolean;
+  imageUrl: string;
+  householdId: number;
+  isPrimary?: boolean;
 }
 
 export interface Household extends BaseEntity {
   name: string;
-  owner_id: number;
+  ownerId: number;
   members?: Member[];
 }
 
@@ -30,38 +30,38 @@ export interface Session {
 export interface ExpenseCategory extends BaseEntity {
   name: string;
   color: string;
-  household_id: number;
-  is_default?: boolean;
+  householdId: number;
+  isDefault?: boolean;
 }
 
 export interface Expense extends BaseEntity {
   amount: number;
   description: string;
   date: string;
-  category_id: number;
+  categoryId: number;
   category?: ExpenseCategory;
-  monthly_budget_id: number;
+  monthlyBudgetId: number;
 }
 
 export interface MonthlyBudget extends BaseEntity {
   year: number;
   month: number;
-  planned_amount: number;
-  household_id: number;
+  plannedAmount: number;
+  householdId: number;
   expenses?: Expense[];
 }
 
 export interface InvestmentAsset extends BaseEntity {
   name: string;
   ticker?: string;
-  asset_type: string;
-  household_id: number;
+  assetType: string;
+  householdId: number;
 }
 
 export interface Loan extends BaseEntity {
   name: string;
-  principal_amount: number;
-  interest_rate: number;
-  start_date: string;
-  household_id: number;
+  principalAmount: number;
+  interestRate: number;
+  startDate: string;
+  householdId: number;
 }

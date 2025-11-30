@@ -1,7 +1,7 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { membersApi } from "./requests";
-import { queryKeys } from "@/lib/react-query";
-import type { CreateMemberRequest, UpdateMemberRequest } from "./types";
+import { queryKeys } from '@/lib/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { membersApi } from './requests';
+import type { CreateMemberRequest, UpdateMemberRequest } from './types';
 
 export function useMembers(householdId: number) {
   return useQuery({
@@ -18,7 +18,7 @@ export function useCreateMember() {
     mutationFn: (data: CreateMemberRequest) => membersApi.createMember(data),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
-        queryKey: queryKeys.members.byHousehold(variables.household_id),
+        queryKey: queryKeys.members.byHousehold(variables.householdId),
       });
     },
   });

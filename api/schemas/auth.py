@@ -33,5 +33,14 @@ class LogoutResponse(BaseModel):
     success: bool
 
 
+class HouseholdResponse(BaseModel):
+    id: int
+    name: str
+
+    class Config:
+        from_attributes = True
+
+
 class WhoAmIResponse(BaseModel):
     user: UserResponse | None
+    household: HouseholdResponse | None

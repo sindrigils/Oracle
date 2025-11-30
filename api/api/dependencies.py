@@ -1,14 +1,13 @@
-from fastapi import Depends, HTTPException, Request
-from starlette.status import HTTP_401_UNAUTHORIZED, HTTP_403_FORBIDDEN
-from sqlalchemy.orm import Session
-
+from core.config import settings
 from db.engine import get_db
-from models.user import User
+from fastapi import Depends, HTTPException, Request
 from models.household import Household
 from models.member import Member
 from models.session import Session as SessionModel
+from models.user import User
 from services.session import SessionService, get_session_service
-from core.config import settings
+from sqlalchemy.orm import Session
+from starlette.status import HTTP_401_UNAUTHORIZED, HTTP_403_FORBIDDEN
 
 
 def get_session_from_cookie_optional(

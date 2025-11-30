@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends
-
 from models.member import Member
 from schemas.member import (
     CreateMemberRequest,
@@ -8,8 +7,8 @@ from schemas.member import (
     GetMembersResponse,
 )
 from services.member import MemberService, get_member_service
-from api.dependencies import verify_household_access, get_user_member
 
+from api.dependencies import get_user_member
 
 router = APIRouter(prefix="/members", tags=["Members"])
 
@@ -28,7 +27,9 @@ async def create_member(
     member_service: MemberService = Depends(get_member_service),
 ):
     return member_service.create_member(
-        member.name, member.image_url, member.household_id
+        member.name,
+        member.household_id,
+        member.image_url,
     )
 
 

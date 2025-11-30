@@ -1,4 +1,4 @@
-import { QueryClient, DefaultOptions } from '@tanstack/react-query';
+import { DefaultOptions, QueryClient } from '@tanstack/react-query';
 
 const defaultOptions: DefaultOptions = {
   queries: {
@@ -6,7 +6,11 @@ const defaultOptions: DefaultOptions = {
     gcTime: 1000 * 60 * 30,
     retry: (failureCount, error: unknown) => {
       const axiosError = error as { response?: { status?: number } };
-      if (axiosError?.response?.status && axiosError.response.status >= 400 && axiosError.response.status < 500) {
+      if (
+        axiosError?.response?.status &&
+        axiosError.response.status >= 400 &&
+        axiosError.response.status < 500
+      ) {
         return false;
       }
       return failureCount < 3;
@@ -34,7 +38,8 @@ export const queryKeys = {
   },
   members: {
     all: ['members'] as const,
-    byHousehold: (householdId: number) => [...queryKeys.members.all, householdId] as const,
+    byHousehold: (householdId: number) =>
+      [...queryKeys.members.all, householdId] as const,
   },
   households: {
     all: ['households'] as const,
@@ -42,11 +47,26 @@ export const queryKeys = {
   },
   budgets: {
     all: ['budgets'] as const,
-    byMonth: (year: number, month: number) => [...queryKeys.budgets.all, year, month] as const,
+    byMonth: (year: number, month: number) =>
+      [...queryKeys.budgets.all, year, month] as const,
+  },
+  expenses: {
+    all: ['expenses'] as const,
+    byBudget: (budgetId: number) =>
+      [...queryKeys.expenses.all, budgetId] as const,
+  },
+  income: {
+    all: ['income'] as const,
+    byBudget: (budgetId: number) =>
+      [...queryKeys.income.all, budgetId] as const,
+  },
+  categories: {
+    all: ['categories'] as const,
   },
   investments: {
     all: ['investments'] as const,
-    byMember: (memberId: number) => [...queryKeys.investments.all, memberId] as const,
+    byMember: (memberId: number) =>
+      [...queryKeys.investments.all, memberId] as const,
   },
   loans: {
     all: ['loans'] as const,

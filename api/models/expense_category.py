@@ -1,7 +1,14 @@
-from db.base import Base
-from sqlalchemy import Column, String, Boolean, Enum
-from sqlalchemy.orm import relationship
+from __future__ import annotations
+
 import enum
+from typing import TYPE_CHECKING
+
+from db.base import Base
+from sqlalchemy import Boolean, Enum, String
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+if TYPE_CHECKING:
+    from models.expense import Expense
 
 
 class Color(enum.Enum):
@@ -22,9 +29,11 @@ class Color(enum.Enum):
 class ExpenseCategory(Base):
     __tablename__ = "expense_categories"
 
-    expenses = relationship("Expense", back_populates="category")
+    expenses: Mapped[list["Expense"]] = relationship(
+        "Expense", back_populates="category"
+    )
 
-    name = Column(String)
-    is_custom = Column(Boolean, default=False)
-    color = Column(Enum(Color))
-    color_code = Column(String, nullable=True)
+    name: Mapped[str] = mapped_column(String)
+    is_custom: Mapped[bool] = mapped_column(Boolean, default=False)
+    color: Mapped[Color] = mapped_column(Enum(Color))
+    color_code: Mapped[str | None] = mapped_column(String, nullable=True)

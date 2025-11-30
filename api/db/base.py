@@ -1,25 +1,29 @@
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, String, DateTime, Integer, event
-from datetime import datetime
+from __future__ import annotations
+
 import hashlib
+from datetime import datetime
+
+from sqlalchemy import DateTime, Integer, String, event
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
-class Base(declarative_base()):
+class Base(DeclarativeBase):
     __abstract__ = True
-    id = Column(
+
+    id: Mapped[int] = mapped_column(
         Integer,
         primary_key=True,
         index=True,
         autoincrement=True,
     )
-    short_id = Column(
+    short_id: Mapped[str | None] = mapped_column(
         String,
         index=True,
         unique=True,
         nullable=True,
     )
-    created_at = Column(DateTime, default=datetime.now())
-    updated_at = Column(DateTime, default=datetime.now())
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now)
 
 
 def generate_short_id(table_name: str, id_value: int) -> str:

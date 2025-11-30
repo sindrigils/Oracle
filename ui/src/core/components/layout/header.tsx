@@ -1,22 +1,23 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/api/auth/context";
-import { Button, buttonVariants } from "@/core/components/ui/button";
-import { LogOut, User } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { useAuth } from '@/api/auth/context';
+import { Button, buttonVariants } from '@/core/components/ui/button';
+import { cn } from '@/lib/utils';
+import { LogOut, User } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export function Header() {
   const router = useRouter();
   const { user, isAuthenticated, isLoading, logout, isLoggingOut } = useAuth();
+  console.log('user', user);
 
   const handleLogout = async () => {
     try {
       await logout();
-      router.push("/login");
+      router.push('/login');
     } catch (error) {
-      console.error("Logout failed:", error);
+      console.error('Logout failed:', error);
     }
   };
 
@@ -53,13 +54,15 @@ export function Header() {
             <div className="flex items-center gap-2">
               <Link
                 href="/login"
-                className={cn(buttonVariants({ variant: "ghost", size: "sm" }))}
+                className={cn(buttonVariants({ variant: 'ghost', size: 'sm' }))}
               >
                 Sign in
               </Link>
               <Link
                 href="/register"
-                className={cn(buttonVariants({ variant: "primary", size: "sm" }))}
+                className={cn(
+                  buttonVariants({ variant: 'primary', size: 'sm' })
+                )}
               >
                 Get started
               </Link>

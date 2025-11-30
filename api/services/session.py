@@ -1,10 +1,12 @@
-from models.session import Session as SessionModel
 import secrets
-from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
+
 from core.config import settings
 from db.engine import get_db
 from fastapi import Depends
+from models.session import Session as SessionModel
+from models.user import User
+from sqlalchemy.orm import Session, joinedload
 
 
 class SessionService:
@@ -38,7 +40,10 @@ class SessionService:
     def get_valid_session(self, token: str) -> SessionModel | None:
         """Get a session by token if it exists and is not expired."""
         session = (
-            self.db.query(SessionModel).filter(SessionModel.token == token).first()
+            self.db.query(SessionModel)
+            .options(joinedload(SessionModel.user).joinedload(User.households))
+            .filter(SessionModel.token == token)
+            .first()
         )
         if not session or session.expires_at < datetime.now():
             return None

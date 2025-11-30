@@ -1,8 +1,9 @@
 from typing import Optional
-from fastapi import Depends
-from sqlalchemy.orm import Session
-from models.member import Member
+
 from db.engine import get_db
+from fastapi import Depends
+from models.member import Member
+from sqlalchemy.orm import Session
 
 
 class MemberService:
@@ -12,8 +13,8 @@ class MemberService:
     def create_member(
         self,
         name: str,
-        image_url: str,
         household_id: int,
+        image_url: Optional[str] = None,
     ) -> Member:
         member = Member(name=name, image_url=image_url, household_id=household_id)
         self.db.add(member)

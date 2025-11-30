@@ -1,7 +1,17 @@
-from db.base import Base
-from sqlalchemy import Column, Integer, ForeignKey, Float, Date, String, Enum
-from sqlalchemy.orm import relationship
+from __future__ import annotations
+
 import enum
+from datetime import date
+from typing import TYPE_CHECKING
+
+from db.base import Base
+from sqlalchemy import Date, Enum, Float, ForeignKey, Integer, String
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+if TYPE_CHECKING:
+    from models.household import Household
+    from models.investment_asset import InvestmentAsset
+    from models.member import Member
 
 
 class TransactionType(enum.Enum):
@@ -14,15 +24,21 @@ class TransactionType(enum.Enum):
 class InvestmentTransaction(Base):
     __tablename__ = "investment_transaction"
 
-    household_id = Column(Integer, ForeignKey("household.id"))
-    household = relationship("Household", back_populates="investment_transactions")
-    member_id = Column(Integer, ForeignKey("member.id"))
-    member = relationship("Member", back_populates="investment_transactions")
-    asset_id = Column(Integer, ForeignKey("investment_asset.id"))
-    asset = relationship("InvestmentAsset", back_populates="investment_transactions")
-    transaction_type = Column(Enum(TransactionType))
-    quantity = Column(Integer)
-    date = Column(Date)
-    price_per_unit = Column(Float)
-    fees = Column(Float, nullable=True)
-    note = Column(String, nullable=True)
+    household_id: Mapped[int] = mapped_column(Integer, ForeignKey("household.id"))
+    household: Mapped["Household"] = relationship(
+        "Household", back_populates="investment_transactions"
+    )
+    member_id: Mapped[int] = mapped_column(Integer, ForeignKey("member.id"))
+    member: Mapped["Member"] = relationship(
+        "Member", back_populates="investment_transactions"
+    )
+    asset_id: Mapped[int] = mapped_column(Integer, ForeignKey("investment_asset.id"))
+    asset: Mapped["InvestmentAsset"] = relationship(
+        "InvestmentAsset", back_populates="investment_transactions"
+    )
+    transaction_type: Mapped[TransactionType] = mapped_column(Enum(TransactionType))
+    quantity: Mapped[int] = mapped_column(Integer)
+    date: Mapped[date] = mapped_column(Date)
+    price_per_unit: Mapped[float] = mapped_column(Float)
+    fees: Mapped[float | None] = mapped_column(Float, nullable=True)
+    note: Mapped[str | None] = mapped_column(String, nullable=True)

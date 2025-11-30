@@ -1,21 +1,23 @@
+from core.config import settings
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
-from starlette.status import HTTP_401_UNAUTHORIZED
-
-from api.dependencies import get_current_session, get_session_from_cookie_optional
-from services.user import UserService, get_user_service
-from services.session import SessionService, get_session_service
+from models.session import Session as SessionModel
 from schemas.auth import (
+    HouseholdResponse,
     LoginRequest,
     LoginResponse,
+    LogoutResponse,
     RegisterRequest,
     RegisterResponse,
-    LogoutResponse,
     UserResponse,
     WhoAmIResponse,
 )
-from models.session import Session as SessionModel
-from core.config import settings
+from services.household import HouseholdService, get_household_service
+from services.member import MemberService, get_member_service
+from services.session import SessionService, get_session_service
+from services.user import UserService, get_user_service
+from starlette.status import HTTP_401_UNAUTHORIZED
 
+from api.dependencies import get_current_session, get_session_from_cookie_optional
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
@@ -73,8 +75,14 @@ async def login(
 async def register(
     request: RegisterRequest,
     user_service: UserService = Depends(get_user_service),
+    household_service: HouseholdService = Depends(get_household_service),
+    member_service: MemberService = Depends(get_member_service),
 ):
-    user_service.create_user(request.username, request.email, request.password)
+    user = user_service.create_user(request.username, request.email, request.password)
+    household = household_service.create_household(
+        f"{user.username}'s Household", user.id
+    )
+    member_service.create_member(user.username, household.id)
     return RegisterResponse(success=True)
 
 
@@ -94,5 +102,16 @@ async def whoami(
     session: SessionModel | None = Depends(get_session_from_cookie_optional),
 ):
     if session is None:
-        return WhoAmIResponse(user=None)
-    return WhoAmIResponse(user=UserResponse.model_validate(session.user))
+        return WhoAmIResponse(user=None, household=None)
+
+    user_response = UserResponse.model_validate(session.user)
+    household_response = None
+    if session.user.households:
+        household_response = HouseholdResponse.model_validate(
+            session.user.households[0]
+        )
+
+    return WhoAmIResponse(
+        user=user_response,
+        household=household_response,
+    )

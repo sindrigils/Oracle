@@ -1,5 +1,6 @@
+from typing import Literal, Optional
+
 from pydantic_settings import BaseSettings
-from typing import Optional
 
 DAY = 3600 * 24
 
@@ -12,7 +13,7 @@ class Settings(BaseSettings):
     # Cookie settings
     session_cookie_name: str = "oracle_session"
     cookie_secure: bool = False  # Set True in production (HTTPS only)
-    cookie_samesite: str = "lax"
+    cookie_samesite: Literal["lax", "strict", "none"] = "lax"
     cookie_domain: Optional[str] = None  # None = current domain only
 
     # CORS

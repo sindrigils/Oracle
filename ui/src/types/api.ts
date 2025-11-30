@@ -5,7 +5,7 @@ export interface ApiResponse<T> {
 
 export interface ApiError {
   detail: string;
-  status_code?: number;
+  statusCode?: number;
 }
 
 export interface PaginatedResponse<T> {

@@ -15,6 +15,11 @@ export interface UserResponse {
   email: string;
 }
 
+export interface HouseholdResponse {
+  id: number;
+  name: string;
+}
+
 export interface LoginResponse {
   user: UserResponse;
 }
@@ -29,4 +34,5 @@ export interface LogoutResponse {
 
 export interface WhoAmIResponse {
   user: UserResponse | null;
+  household: HouseholdResponse | null;
 }

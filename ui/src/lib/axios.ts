@@ -1,5 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import { env } from './env';
+import { camelToSnake, snakeToCamel } from './utils';
 
 export const apiClient = axios.create({
   baseURL: env.apiBaseUrl,
@@ -10,8 +11,25 @@ export const apiClient = axios.create({
   withCredentials: true, // Required for cookies to be sent/received
 });
 
+// Request interceptor - convert outgoing data to snake_case
+apiClient.interceptors.request.use((config) => {
+  if (config.data) {
+    config.data = camelToSnake(config.data);
+  }
+  if (config.params) {
+    config.params = camelToSnake(config.params);
+  }
+  return config;
+});
+
+// Response interceptor - convert incoming data to camelCase
 apiClient.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    if (response.data) {
+      response.data = snakeToCamel(response.data);
+    }
+    return response;
+  },
   (error: AxiosError) => {
     // Don't redirect for /auth/me - it's expected to return null when not authenticated
     const isAuthMeRequest = error.config?.url?.includes('/auth/me');

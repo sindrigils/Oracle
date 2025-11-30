@@ -1,14 +1,22 @@
-from sqlalchemy import Column, Integer, ForeignKey, String, DateTime
-from sqlalchemy.orm import relationship
+from __future__ import annotations
+
+from datetime import datetime
+from typing import TYPE_CHECKING
+
 from db.base import Base
+from sqlalchemy import DateTime, ForeignKey, Integer, String
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+if TYPE_CHECKING:
+    from models.user import User
 
 
 class Session(Base):
     __tablename__ = "sessions"
 
-    user_id = Column(Integer, ForeignKey("users.id"))
-    user = relationship("User", back_populates="sessions")
-    token = Column(String, index=True, unique=True)
-    expires_at = Column(DateTime)
-    user_agent = Column(String)
-    ip_address = Column(String)
+    user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"))
+    user: Mapped["User"] = relationship("User", back_populates="sessions")
+    token: Mapped[str] = mapped_column(String, index=True, unique=True)
+    expires_at: Mapped[datetime] = mapped_column(DateTime)
+    user_agent: Mapped[str] = mapped_column(String)
+    ip_address: Mapped[str] = mapped_column(String)
