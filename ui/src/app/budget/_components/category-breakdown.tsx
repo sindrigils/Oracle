@@ -2,7 +2,6 @@
 
 import type { Expense, ExpenseCategory } from '@/api/budget/types';
 import { EmptyState } from '@/core/components';
-import { cn } from '@/lib/utils';
 import { ChevronDown, ChevronUp, FolderOpen } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { TransactionItem } from './transaction-item';
@@ -81,9 +80,7 @@ export function CategoryBreakdown({
   );
 
   const toggleExpand = (categoryId: number) => {
-    setExpandedCategoryId((prev) =>
-      prev === categoryId ? null : categoryId
-    );
+    setExpandedCategoryId((prev) => (prev === categoryId ? null : categoryId));
   };
 
   if (categorySpending.length === 0) {
@@ -100,91 +97,93 @@ export function CategoryBreakdown({
 
   return (
     <div className="divide-y divide-zinc-100 dark:divide-zinc-800">
-      {categorySpending.map(({ category, total, expenses: categoryExpenses }) => {
-        const isExpanded = expandedCategoryId === category.id;
-        const percentage =
-          totalExpenses > 0 ? (total / totalExpenses) * 100 : 0;
-        const categoryColor = category.colorCode || category.color;
+      {categorySpending.map(
+        ({ category, total, expenses: categoryExpenses }) => {
+          const isExpanded = expandedCategoryId === category.id;
+          const percentage =
+            totalExpenses > 0 ? (total / totalExpenses) * 100 : 0;
+          const categoryColor = category.colorCode || category.color;
 
-        return (
-          <div key={category.id} className="py-4 first:pt-2 last:pb-2">
-            {/* Category Header - Clickable */}
-            <button
-              onClick={() => toggleExpand(category.id)}
-              className="w-full text-left"
-            >
-              {/* Top row: Name and Amount */}
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-3">
-                  <div
-                    className="h-3 w-3 rounded-full flex-shrink-0"
-                    style={{ backgroundColor: categoryColor }}
-                  />
-                  <span className="font-medium text-zinc-900 dark:text-white">
-                    {category.name}
+          return (
+            <div key={category.id} className="py-4 first:pt-2 last:pb-2">
+              {/* Category Header - Clickable */}
+              <button
+                onClick={() => toggleExpand(category.id)}
+                className="w-full text-left"
+              >
+                {/* Top row: Name and Amount */}
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="h-3 w-3 rounded-full flex-shrink-0"
+                      style={{ backgroundColor: categoryColor }}
+                    />
+                    <span className="font-medium text-zinc-900 dark:text-white">
+                      {category.name}
+                    </span>
+                  </div>
+                  <span className="font-semibold tabular-nums text-zinc-900 dark:text-white">
+                    {formatCurrency(total)}
                   </span>
                 </div>
-                <span className="font-semibold tabular-nums text-zinc-900 dark:text-white">
-                  {formatCurrency(total)}
-                </span>
-              </div>
 
-              {/* Progress bar */}
-              <div className="h-2 rounded-full bg-zinc-100 dark:bg-zinc-800 overflow-hidden mb-1.5">
-                <div
-                  className="h-full rounded-full transition-all duration-500 ease-out"
-                  style={{
-                    width: `${percentage}%`,
-                    backgroundColor: categoryColor,
-                  }}
-                />
-              </div>
-
-              {/* Bottom row: Percentage and expand hint */}
-              <div className="flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-400">
-                <span>{Math.round(percentage)}% of expenses</span>
-                <span className="flex items-center gap-1">
-                  {categoryExpenses.length}{' '}
-                  {categoryExpenses.length === 1 ? 'item' : 'items'}
-                  {isExpanded ? (
-                    <ChevronUp className="h-3.5 w-3.5" />
-                  ) : (
-                    <ChevronDown className="h-3.5 w-3.5" />
-                  )}
-                </span>
-              </div>
-            </button>
-
-            {/* Expanded: Show expenses in this category */}
-            {isExpanded && (
-              <div className="mt-3 ml-6 border-l-2 border-zinc-100 dark:border-zinc-800 pl-4">
-                {categoryExpenses.map((expense) => (
-                  <TransactionItem
-                    key={expense.id}
-                    transaction={{
-                      type: 'expense',
-                      data: expense,
-                      category: category,
+                {/* Progress bar */}
+                <div className="h-2 rounded-full bg-zinc-100 dark:bg-zinc-800 overflow-hidden mb-1.5">
+                  <div
+                    className="h-full rounded-full transition-all duration-500 ease-out"
+                    style={{
+                      width: `${percentage}%`,
+                      backgroundColor: categoryColor,
                     }}
-                    currency={currency}
-                    onEdit={() => onEditExpense(expense)}
-                    onDelete={() => {
-                      if (
-                        confirm(
-                          'Are you sure you want to delete this expense?'
-                        )
-                      ) {
-                        onDeleteExpense(expense.id);
-                      }
-                    }}
-                    isDeleting={isDeletingExpense}
                   />
-                ))}
-              </div>
-            )}
-          </div>
-        );
-      })}
+                </div>
+
+                {/* Bottom row: Percentage and expand hint */}
+                <div className="flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-400">
+                  <span>{Math.round(percentage)}% of expenses</span>
+                  <span className="flex items-center gap-1">
+                    {categoryExpenses.length}{' '}
+                    {categoryExpenses.length === 1 ? 'item' : 'items'}
+                    {isExpanded ? (
+                      <ChevronUp className="h-3.5 w-3.5" />
+                    ) : (
+                      <ChevronDown className="h-3.5 w-3.5" />
+                    )}
+                  </span>
+                </div>
+              </button>
+
+              {/* Expanded: Show expenses in this category */}
+              {isExpanded && (
+                <div className="mt-3 ml-6 border-l-2 border-zinc-100 dark:border-zinc-800 pl-4">
+                  {categoryExpenses.map((expense) => (
+                    <TransactionItem
+                      key={expense.id}
+                      transaction={{
+                        type: 'expense',
+                        data: expense,
+                        category: category,
+                      }}
+                      currency={currency}
+                      onEdit={() => onEditExpense(expense)}
+                      onDelete={() => {
+                        if (
+                          confirm(
+                            'Are you sure you want to delete this expense?'
+                          )
+                        ) {
+                          onDeleteExpense(expense.id);
+                        }
+                      }}
+                      isDeleting={isDeletingExpense}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        }
+      )}
     </div>
   );
 }

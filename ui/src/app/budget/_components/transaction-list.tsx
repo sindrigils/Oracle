@@ -4,7 +4,7 @@ import type { Expense, ExpenseCategory, Income } from '@/api/budget/types';
 import { EmptyState } from '@/core/components';
 import { cn } from '@/lib/utils';
 import { FolderOpen, List, Receipt } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { CategoryBreakdown } from './category-breakdown';
 import { Transaction, TransactionItem } from './transaction-item';
 
@@ -39,9 +39,12 @@ export function TransactionList({
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [activeTab, setActiveTab] = useState<FilterTab>('all');
 
-  const getCategoryById = (categoryId: number) => {
-    return categories.find((cat) => cat.id === categoryId);
-  };
+  const getCategoryById = useCallback(
+    (categoryId: number) => {
+      return categories.find((cat) => cat.id === categoryId);
+    },
+    [categories]
+  );
 
   // Create unified transaction list
   const transactions = useMemo(() => {
@@ -70,7 +73,7 @@ export function TransactionList({
     return allTransactions.sort(
       (a, b) => b.sortDate.getTime() - a.sortDate.getTime()
     );
-  }, [expenses, income, categories]);
+  }, [expenses, income, getCategoryById]);
 
   // Filter transactions based on active tab
   const filteredTransactions = useMemo(() => {

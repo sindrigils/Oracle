@@ -74,8 +74,11 @@ export default function BudgetPage() {
   const createCategoryMutation = useCreateCategory();
 
   // Computed values
-  const expenses = expensesData?.expenses || [];
-  const income = incomeData?.income || [];
+  const expenses = useMemo(
+    () => expensesData?.expenses || [],
+    [expensesData?.expenses]
+  );
+  const income = useMemo(() => incomeData?.income || [], [incomeData?.income]);
   const categories = categoriesData?.categories || [];
 
   const totalExpenses = useMemo(
@@ -193,7 +196,7 @@ export default function BudgetPage() {
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
       {/* Minimal Header */}
       <header className="sticky top-0 z-40 border-b border-zinc-200 bg-white/80 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-950/80">
-        <div className="mx-auto flex h-14 max-w-3xl items-center justify-between px-4">
+        <div className="mx-auto flex h-14 max-w-3xl lg:max-w-5xl xl:max-w-6xl items-center justify-between px-4">
           {/* Left: Back button */}
           <Link
             href="/"
@@ -214,7 +217,7 @@ export default function BudgetPage() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-3xl px-4 py-6 space-y-6">
+      <main className="mx-auto max-w-3xl lg:max-w-5xl xl:max-w-6xl px-4 py-6 space-y-6">
         {/* Hero Budget Section */}
         <BudgetHero
           totalExpenses={totalExpenses}

@@ -24,27 +24,24 @@ export function IncomeFormModal({
   const isEditing = Boolean(income);
   const amountInputRef = useRef<HTMLInputElement>(null);
 
-  const [formData, setFormData] = useState({
-    amount: '',
-    source: '',
-  });
+  // Reset form state when modal opens or income changes - using key prop to force remount
+  // Key changes when open becomes true or income id changes, resetting all form state
+  const formKey = open ? `income-${income?.id ?? 'new'}` : 'closed';
 
-  const [errors, setErrors] = useState<Record<string, string>>({});
-
-  useEffect(() => {
+  // Initialize form data based on income prop (function initializer runs on mount)
+  const [formData, setFormData] = useState(() => {
     if (income) {
-      setFormData({
+      return {
         amount: income.amount.toString(),
         source: income.source,
-      });
-    } else {
-      setFormData({
-        amount: '',
-        source: '',
-      });
+      };
     }
-    setErrors({});
-  }, [income, open]);
+    return {
+      amount: '',
+      source: '',
+    };
+  });
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (open && amountInputRef.current) {
@@ -80,7 +77,7 @@ export function IncomeFormModal({
 
   return (
     <Modal open={open} onClose={onClose} size="md">
-      <form onSubmit={handleSubmit}>
+      <form key={formKey} onSubmit={handleSubmit}>
         {/* Header */}
         <div className="flex items-center justify-between px-6 pt-6 pb-2">
           <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">

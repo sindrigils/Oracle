@@ -10,7 +10,7 @@ import {
   ModalHeader,
   ModalTitle,
 } from '@/core/components';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 const PRESET_COLORS: { value: CategoryColor; label: string; hex: string }[] = [
   { value: 'red', label: 'Red', hex: '#ef4444' },
@@ -36,17 +36,13 @@ export function CategoryFormModal({
   onSubmit,
   isSubmitting,
 }: CategoryFormModalProps) {
+  // Reset form state when modal opens - using key prop on form to force remount
+  // Key changes when open becomes true, resetting all form state
+  const formKey = open ? 'open' : 'closed';
+
   const [name, setName] = useState('');
   const [selectedColor, setSelectedColor] = useState<CategoryColor>('blue');
   const [errors, setErrors] = useState<Record<string, string>>({});
-
-  useEffect(() => {
-    if (open) {
-      setName('');
-      setSelectedColor('blue');
-      setErrors({});
-    }
-  }, [open]);
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
@@ -72,7 +68,7 @@ export function CategoryFormModal({
 
   return (
     <Modal open={open} onClose={onClose} size="sm">
-      <form onSubmit={handleSubmit}>
+      <form key={formKey} onSubmit={handleSubmit}>
         <ModalHeader onClose={onClose}>
           <ModalTitle>Create Category</ModalTitle>
         </ModalHeader>

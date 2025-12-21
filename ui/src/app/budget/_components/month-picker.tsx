@@ -74,14 +74,17 @@ export function MonthPicker({ year, month, onMonthChange }: MonthPickerProps) {
         <ChevronRight className="h-5 w-5" />
       </button>
 
-      {!isCurrentMonth && (
-        <button
-          onClick={goToCurrentMonth}
-          className="ml-2 px-2 py-1 text-xs font-medium text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white transition-colors"
-        >
-          Today
-        </button>
-      )}
+      <button
+        onClick={goToCurrentMonth}
+        className={`ml-2 px-2 py-1 text-xs font-medium transition-all ${
+          isCurrentMonth
+            ? 'invisible pointer-events-none'
+            : 'text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white'
+        }`}
+        aria-label="Go to current month"
+      >
+        Today
+      </button>
     </div>
   );
 }

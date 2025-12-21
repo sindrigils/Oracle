@@ -33,34 +33,29 @@ export function ExpenseFormModal({
   const today = new Date().toISOString().split('T')[0];
   const amountInputRef = useRef<HTMLInputElement>(null);
 
-  const [formData, setFormData] = useState({
-    amount: '',
-    description: '',
-    date: today,
-    categoryId: '',
-  });
+  // Reset form state when modal opens or expense changes - using key prop to force remount
+  // Key changes when open becomes true or expense id changes, resetting all form state
+  const formKey = open ? `expense-${expense?.id ?? 'new'}` : 'closed';
 
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
-
-  useEffect(() => {
+  // Initialize form data based on expense prop (function initializer runs on mount)
+  const [formData, setFormData] = useState(() => {
     if (expense) {
-      setFormData({
+      return {
         amount: expense.amount.toString(),
         description: expense.description,
         date: expense.date.split('T')[0],
         categoryId: expense.categoryId.toString(),
-      });
-    } else {
-      setFormData({
-        amount: '',
-        description: '',
-        date: today,
-        categoryId: '',
-      });
+      };
     }
-    setErrors({});
-  }, [expense, open, today]);
+    return {
+      amount: '',
+      description: '',
+      date: today,
+      categoryId: '',
+    };
+  });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
 
   useEffect(() => {
     if (open && amountInputRef.current) {
@@ -108,18 +103,9 @@ export function ExpenseFormModal({
     (c) => c.id.toString() === formData.categoryId
   );
 
-  const formatDateDisplay = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString('en-US', {
-      weekday: 'short',
-      month: 'short',
-      day: 'numeric',
-    });
-  };
-
   return (
     <Modal open={open} onClose={onClose} size="md">
-      <form onSubmit={handleSubmit}>
+      <form key={formKey} onSubmit={handleSubmit}>
         {/* Header */}
         <div className="flex items-center justify-between px-6 pt-6 pb-2">
           <h2 className="text-lg font-semibold text-zinc-900 dark:text-white">
