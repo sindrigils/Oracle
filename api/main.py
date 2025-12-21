@@ -1,11 +1,11 @@
-from core.config import settings
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from middleware.case_conversion import CaseConversionMiddleware
-from middleware.session_refresh import SessionRefreshMiddleware
-from models import *
 
 from api.v1 import v1_router
+from core.config import settings
+from middleware.case_conversion import CaseConversionMiddleware
+from middleware.session_refresh import SessionRefreshMiddleware
+from models import *  # noqa: F403
 
 app = FastAPI()
 

@@ -3,9 +3,10 @@ from __future__ import annotations
 import enum
 from typing import TYPE_CHECKING
 
-from db.base import Base
 from sqlalchemy import Boolean, Enum, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from db.base import Base
 
 if TYPE_CHECKING:
     from models.expense import Expense
@@ -29,9 +30,7 @@ class Color(enum.Enum):
 class ExpenseCategory(Base):
     __tablename__ = "expense_categories"
 
-    expenses: Mapped[list["Expense"]] = relationship(
-        "Expense", back_populates="category"
-    )
+    expenses: Mapped[list[Expense]] = relationship("Expense", back_populates="category")
 
     name: Mapped[str] = mapped_column(String)
     is_custom: Mapped[bool] = mapped_column(Boolean, default=False)

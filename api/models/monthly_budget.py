@@ -2,9 +2,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from db.base import Base
 from sqlalchemy import Float, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from db.base import Base
 
 if TYPE_CHECKING:
     from models.expense import Expense
@@ -15,15 +16,15 @@ if TYPE_CHECKING:
 class MonthlyBudget(Base):
     __tablename__ = "monthly_budgets"
 
-    expenses: Mapped[list["Expense"]] = relationship(
+    expenses: Mapped[list[Expense]] = relationship(
         "Expense", back_populates="monthly_budget"
     )
-    incomes: Mapped[list["Income"]] = relationship(
+    incomes: Mapped[list[Income]] = relationship(
         "Income", back_populates="monthly_budget"
     )
 
     household_id: Mapped[int] = mapped_column(Integer, ForeignKey("household.id"))
-    household: Mapped["Household"] = relationship(
+    household: Mapped[Household] = relationship(
         "Household", back_populates="monthly_budgets"
     )
     year: Mapped[int] = mapped_column(Integer)

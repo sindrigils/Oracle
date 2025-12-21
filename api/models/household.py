@@ -2,9 +2,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from db.base import Base
 from sqlalchemy import ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from db.base import Base
 
 if TYPE_CHECKING:
     from models.investment_asset import InvestmentAsset
@@ -18,18 +19,18 @@ if TYPE_CHECKING:
 class Household(Base):
     __tablename__ = "household"
 
-    members: Mapped[list["Member"]] = relationship("Member", back_populates="household")
-    investment_assets: Mapped[list["InvestmentAsset"]] = relationship(
+    members: Mapped[list[Member]] = relationship("Member", back_populates="household")
+    investment_assets: Mapped[list[InvestmentAsset]] = relationship(
         "InvestmentAsset", back_populates="household"
     )
-    investment_transactions: Mapped[list["InvestmentTransaction"]] = relationship(
+    investment_transactions: Mapped[list[InvestmentTransaction]] = relationship(
         "InvestmentTransaction", back_populates="household"
     )
-    monthly_budgets: Mapped[list["MonthlyBudget"]] = relationship(
+    monthly_budgets: Mapped[list[MonthlyBudget]] = relationship(
         "MonthlyBudget", back_populates="household"
     )
-    loans: Mapped[list["Loan"]] = relationship("Loan", back_populates="household")
+    loans: Mapped[list[Loan]] = relationship("Loan", back_populates="household")
 
     name: Mapped[str] = mapped_column(String)
     owner_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"))
-    owner: Mapped["User"] = relationship("User", back_populates="households")
+    owner: Mapped[User] = relationship("User", back_populates="households")

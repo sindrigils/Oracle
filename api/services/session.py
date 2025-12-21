@@ -1,12 +1,13 @@
 import secrets
 from datetime import datetime, timedelta
 
+from fastapi import Depends
+from sqlalchemy.orm import Session, joinedload
+
 from core.config import settings
 from db.engine import get_db
-from fastapi import Depends
 from models.session import Session as SessionModel
 from models.user import User
-from sqlalchemy.orm import Session, joinedload
 
 
 class SessionService:

@@ -1,4 +1,6 @@
 from fastapi import APIRouter, Depends
+
+from api.dependencies import get_user_member
 from models.member import Member
 from schemas.member import (
     CreateMemberRequest,
@@ -7,8 +9,6 @@ from schemas.member import (
     GetMembersResponse,
 )
 from services.member import MemberService, get_member_service
-
-from api.dependencies import get_user_member
 
 router = APIRouter(prefix="/members", tags=["Members"])
 

@@ -14,18 +14,20 @@ def convert_keys_to_snake(obj):
     """Recursively convert all keys in dict/list to snake_case."""
     if isinstance(obj, dict):
         return {camel_to_snake(k): convert_keys_to_snake(v) for k, v in obj.items()}
-    elif isinstance(obj, list):
+    if isinstance(obj, list):
         return [convert_keys_to_snake(item) for item in obj]
     return obj
 
 
 class CaseConversionMiddleware(BaseHTTPMiddleware):
-    """Middleware that converts incoming JSON request body keys from camelCase to snake_case."""
+    """
+    Middleware that converts incoming JSON request body keys from camelCase to snake_case
+    """
 
     async def dispatch(self, request: Request, call_next):
-        if request.method in ("POST", "PUT", "PATCH") and request.headers.get(
-            "content-type", ""
-        ).startswith("application/json"):
+        if request.method in ("POST", "PUT", "PATCH") and request.headers.get("content-type", "").startswith(
+            "application/json"
+        ):
             body = await request.body()
             if body:
                 try:

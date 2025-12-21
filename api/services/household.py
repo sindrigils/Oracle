@@ -1,7 +1,8 @@
-from db.engine import get_db
 from fastapi import Depends
-from models.household import Household
 from sqlalchemy.orm import Session
+
+from db.engine import get_db
+from models.household import Household
 
 
 class HouseholdService:

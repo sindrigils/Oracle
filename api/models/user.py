@@ -2,10 +2,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from db.base import Base
 from passlib.context import CryptContext
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from db.base import Base
 
 if TYPE_CHECKING:
     from models.household import Household
@@ -17,8 +18,8 @@ pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 class User(Base):
     __tablename__ = "users"
 
-    sessions: Mapped[list["Session"]] = relationship("Session", back_populates="user")
-    households: Mapped[list["Household"]] = relationship(
+    sessions: Mapped[list[Session]] = relationship("Session", back_populates="user")
+    households: Mapped[list[Household]] = relationship(
         "Household", back_populates="owner"
     )
 

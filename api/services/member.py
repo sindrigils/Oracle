@@ -1,9 +1,10 @@
 from typing import Optional
 
-from db.engine import get_db
 from fastapi import Depends
-from models.member import Member
 from sqlalchemy.orm import Session
+
+from db.engine import get_db
+from models.member import Member
 
 
 class MemberService:

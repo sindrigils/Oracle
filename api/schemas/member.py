@@ -1,5 +1,6 @@
-from models.member import Member
 from pydantic import BaseModel
+
+from models.member import Member
 
 
 class CreateMemberRequest(BaseModel):

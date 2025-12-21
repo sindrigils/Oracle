@@ -2,9 +2,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from db.base import Base
 from sqlalchemy import ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from db.base import Base
 
 if TYPE_CHECKING:
     from models.household import Household
@@ -16,17 +17,17 @@ if TYPE_CHECKING:
 class Member(Base):
     __tablename__ = "member"
 
-    investment_assets: Mapped[list["InvestmentAsset"]] = relationship(
+    investment_assets: Mapped[list[InvestmentAsset]] = relationship(
         "InvestmentAsset", back_populates="member"
     )
-    investment_transactions: Mapped[list["InvestmentTransaction"]] = relationship(
+    investment_transactions: Mapped[list[InvestmentTransaction]] = relationship(
         "InvestmentTransaction", back_populates="member"
     )
-    loan_members: Mapped[list["LoanMember"]] = relationship(
+    loan_members: Mapped[list[LoanMember]] = relationship(
         "LoanMember", back_populates="member"
     )
 
     name: Mapped[str] = mapped_column(String)
     image_url: Mapped[str] = mapped_column(String)
     household_id: Mapped[int] = mapped_column(Integer, ForeignKey("household.id"))
-    household: Mapped["Household"] = relationship("Household", back_populates="members")
+    household: Mapped[Household] = relationship("Household", back_populates="members")

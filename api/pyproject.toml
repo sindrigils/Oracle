@@ -18,3 +18,51 @@ dependencies = [
     "sqlalchemy>=2.0.44",
     "uvicorn[standard]>=0.38.0",
 ]
+
+[tool.ruff]
+target-version = "py313"
+line-length = 120
+exclude = ["alembic", ".venv"]
+
+[tool.ruff.lint]
+select = [
+    "E",     # Whitespace, indentation, and PEP8 style issues
+    "F",     # Undefined names, unused variables, dead code
+    "I",     # Isort
+    "UP",    # Modernizes syntax to match target Python version
+    "DJ",    # Django-specific best practices
+    "ASYNC", # Flags blocking calls and bad patterns in async code
+    "RUF",   # Ruff-specific correctness and style improvements
+    "B",     # Catches likely bugs and suspicious code
+    "N",     # Enforces naming conventions
+    "SIM",   # Suggests simpler control-flow patterns
+    "C4",    # Enforces efficient list/set/dict comprehensions
+    "ISC",   # Catches implicit string concatenation bugs
+    "LOG",   # Enforces correct logging format strings
+    "T10",   # Flags pdb/breakpoint left in code
+    "RET",   # Enforces consistent return statements
+    "RSE",   # Enforces proper raise statement usage
+    "Q",     # Enforces consistent quote style
+    "PYI",   # Type stub file (.pyi) linting
+    "PIE",   # Misc linting for Python idioms
+    "ICN",   # Enforces import naming conventions
+    "INT",   # Validates gettext internationalization calls
+    "TC",    # Moves type-only imports into TYPE_CHECKING blocks
+    "S",     # Detects common security issues
+]
+
+ignore = [
+    "UP045",  # Enforces `X | None` instead of `Optional[X]`
+    "UP007",  # Enforces `X | Y` instead of `Union[X, Y]`
+    "C401",   # Enforces set literals over set([...])
+    "C405",   # Enforces set literals over set()
+    "TC006",  # Enforces string type annotations in cast()
+    "B008",  # FastAPI Depends() pattern
+    "S101",   # Flags use of assert
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
+skip-magic-trailing-comma = false

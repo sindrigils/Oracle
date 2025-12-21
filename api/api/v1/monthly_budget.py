@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
+
 from schemas.expense import (
     CreateExpenseRequest,
     CreateExpenseResponse,

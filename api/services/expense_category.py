@@ -1,10 +1,11 @@
 from datetime import datetime
 from typing import Optional
 
-from db.engine import get_db
 from fastapi import Depends
-from models.expense_category import Color, ExpenseCategory
 from sqlalchemy.orm import Session
+
+from db.engine import get_db
+from models.expense_category import Color, ExpenseCategory
 
 # Default categories that should exist for all users
 DEFAULT_CATEGORIES = [
@@ -40,9 +41,7 @@ class ExpenseCategoryService:
     def _ensure_default_categories(self) -> None:
         """Create default categories if they don't exist, or update existing ones."""
         existing_defaults = (
-            self.db.query(ExpenseCategory)
-            .filter(ExpenseCategory.is_custom == False)
-            .all()
+            self.db.query(ExpenseCategory).filter(not ExpenseCategory.is_custom).all()
         )
 
         # If no default categories exist, create them

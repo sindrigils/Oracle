@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
+
 from models.expense_category import Color
 from schemas.expense_category import (
     CategoryResponse,
@@ -43,11 +44,11 @@ async def create_category(
     """Create a new custom expense category."""
     try:
         color = Color(request.color)
-    except ValueError:
+    except ValueError as e:
         raise HTTPException(
             status_code=400,
             detail=f"Invalid color. Must be one of: {[c.value for c in Color]}",
-        )
+        ) from e
 
     category = category_service.create(
         name=request.name,
@@ -75,4 +76,4 @@ async def delete_category(
             raise HTTPException(status_code=404, detail="Category not found")
         return DeleteCategoryResponse(success=True)
     except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e)) from e

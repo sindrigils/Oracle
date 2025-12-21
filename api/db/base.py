@@ -37,8 +37,7 @@ def generate_short_id(table_name: str, id_value: int) -> str:
     hash_hex = hash_obj.hexdigest()
 
     # Take first 7 characters and ensure it's alphanumeric
-    short_id = hash_hex[:7].upper()
-    return short_id
+    return hash_hex[:7].upper()
 
 
 @event.listens_for(Base, "after_insert")

@@ -1,5 +1,8 @@
-from core.config import settings
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
+from starlette.status import HTTP_401_UNAUTHORIZED
+
+from api.dependencies import get_current_session, get_session_from_cookie_optional
+from core.config import settings
 from models.session import Session as SessionModel
 from schemas.auth import (
     HouseholdResponse,
@@ -15,9 +18,6 @@ from services.household import HouseholdService, get_household_service
 from services.member import MemberService, get_member_service
 from services.session import SessionService, get_session_service
 from services.user import UserService, get_user_service
-from starlette.status import HTTP_401_UNAUTHORIZED
-
-from api.dependencies import get_current_session, get_session_from_cookie_optional
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 

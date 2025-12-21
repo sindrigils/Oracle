@@ -1,12 +1,14 @@
+from typing import Optional
+
 from fastapi import Depends
 from fastapi.exceptions import HTTPException
-from sqlalchemy.orm import Session
-from sqlalchemy import or_
-from starlette.status import HTTP_400_BAD_REQUEST
-from models.user import User
-from typing import Optional
-from db.engine import get_db
 from pydantic import EmailStr
+from sqlalchemy import or_
+from sqlalchemy.orm import Session
+from starlette.status import HTTP_400_BAD_REQUEST
+
+from db.engine import get_db
+from models.user import User
 
 
 class UserService:
@@ -40,10 +42,9 @@ class UserService:
                 raise HTTPException(
                     status_code=HTTP_400_BAD_REQUEST, detail="Username already taken"
                 )
-            else:
-                raise HTTPException(
-                    status_code=HTTP_400_BAD_REQUEST, detail="Email already taken"
-                )
+            raise HTTPException(
+                status_code=HTTP_400_BAD_REQUEST, detail="Email already taken"
+            )
         user = User(username=username, email=email)
         user.set_password(password)
         self.db.add(user)

@@ -1,11 +1,12 @@
 from __future__ import annotations
 
-from datetime import date
+from datetime import date  # noqa: TC003
 from typing import TYPE_CHECKING
 
-from db.base import Base
 from sqlalchemy import Date, Float, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from db.base import Base
 
 if TYPE_CHECKING:
     from models.household import Household
@@ -16,18 +17,18 @@ if TYPE_CHECKING:
 
 class Loan(Base):
     __tablename__ = "loan"
-    loan_members: Mapped[list["LoanMember"]] = relationship(
+    loan_members: Mapped[list[LoanMember]] = relationship(
         "LoanMember", back_populates="loan"
     )
-    loan_payments: Mapped[list["LoanPayment"]] = relationship(
+    loan_payments: Mapped[list[LoanPayment]] = relationship(
         "LoanPayment", back_populates="loan"
     )
-    loan_snapshots: Mapped[list["LoanSnapshot"]] = relationship(
+    loan_snapshots: Mapped[list[LoanSnapshot]] = relationship(
         "LoanSnapshot", back_populates="loan"
     )
 
     household_id: Mapped[int] = mapped_column(Integer, ForeignKey("household.id"))
-    household: Mapped["Household"] = relationship("Household", back_populates="loans")
+    household: Mapped[Household] = relationship("Household", back_populates="loans")
     name: Mapped[str] = mapped_column(String)
     loan_type: Mapped[str] = mapped_column(String)
     currency: Mapped[str] = mapped_column(String)

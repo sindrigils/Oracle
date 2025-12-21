@@ -3,9 +3,10 @@ from __future__ import annotations
 from enum import Enum as PyEnum
 from typing import TYPE_CHECKING
 
-from db.base import Base
-from sqlalchemy import Enum, Float, ForeignKey, Integer, String
+from sqlalchemy import Enum, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from db.base import Base
 
 if TYPE_CHECKING:
     from models.household import Household
@@ -22,21 +23,19 @@ class ValuationMode(PyEnum):
 class InvestmentAsset(Base):
     __tablename__ = "investment_asset"
 
-    investment_transactions: Mapped[list["InvestmentTransaction"]] = relationship(
+    investment_transactions: Mapped[list[InvestmentTransaction]] = relationship(
         "InvestmentTransaction", back_populates="asset"
     )
-    valuation_snapshots: Mapped[list["InvestmentValuationSnapshot"]] = relationship(
+    valuation_snapshots: Mapped[list[InvestmentValuationSnapshot]] = relationship(
         "InvestmentValuationSnapshot", back_populates="asset"
     )
 
     household_id: Mapped[int] = mapped_column(Integer, ForeignKey("household.id"))
-    household: Mapped["Household"] = relationship(
+    household: Mapped[Household] = relationship(
         "Household", back_populates="investment_assets"
     )
     member_id: Mapped[int] = mapped_column(Integer, ForeignKey("member.id"))
-    member: Mapped["Member"] = relationship(
-        "Member", back_populates="investment_assets"
-    )
+    member: Mapped[Member] = relationship("Member", back_populates="investment_assets")
     name: Mapped[str] = mapped_column(String)
     symbol: Mapped[str] = mapped_column(String)
     asset_type: Mapped[str] = mapped_column(String)

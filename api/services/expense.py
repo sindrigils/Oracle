@@ -1,10 +1,11 @@
 from datetime import datetime
 from typing import Optional
 
-from db.engine import get_db
 from fastapi import Depends
-from models.expense import Expense
 from sqlalchemy.orm import Session
+
+from db.engine import get_db
+from models.expense import Expense
 
 
 class ExpenseService:
