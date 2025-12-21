@@ -16,17 +16,11 @@ if TYPE_CHECKING:
 class MonthlyBudget(Base):
     __tablename__ = "monthly_budgets"
 
-    expenses: Mapped[list[Expense]] = relationship(
-        "Expense", back_populates="monthly_budget"
-    )
-    incomes: Mapped[list[Income]] = relationship(
-        "Income", back_populates="monthly_budget"
-    )
+    expenses: Mapped[list[Expense]] = relationship("Expense", back_populates="monthly_budget")
+    incomes: Mapped[list[Income]] = relationship("Income", back_populates="monthly_budget")
 
     household_id: Mapped[int] = mapped_column(Integer, ForeignKey("household.id"))
-    household: Mapped[Household] = relationship(
-        "Household", back_populates="monthly_budgets"
-    )
+    household: Mapped[Household] = relationship("Household", back_populates="monthly_budgets")
     year: Mapped[int] = mapped_column(Integer)
     month: Mapped[int] = mapped_column(Integer)
     name: Mapped[str] = mapped_column(String)

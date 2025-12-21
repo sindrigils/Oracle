@@ -33,12 +33,8 @@ class MonthlyBudgetService:
             .order_by(MonthlyBudget.created_at.desc())
             .first()
         )
-        currency = (
-            previous_monthly_budget.currency if previous_monthly_budget else "ISK"
-        )
-        planned_budget = (
-            previous_monthly_budget.planned_budget if previous_monthly_budget else 0
-        )
+        currency = previous_monthly_budget.currency if previous_monthly_budget else "ISK"
+        planned_budget = previous_monthly_budget.planned_budget if previous_monthly_budget else 0
         monthly_budget = MonthlyBudget(
             household_id=household_id,
             year=year,
@@ -57,11 +53,7 @@ class MonthlyBudgetService:
         planned_budget: Optional[float] = None,
         currency: Optional[str] = None,
     ) -> MonthlyBudget:
-        monthly_budget = (
-            self.db.query(MonthlyBudget)
-            .filter(MonthlyBudget.id == monthly_budget_id)
-            .first()
-        )
+        monthly_budget = self.db.query(MonthlyBudget).filter(MonthlyBudget.id == monthly_budget_id).first()
         if not monthly_budget:
             raise ValueError("Monthly budget not found")
         if planned_budget:

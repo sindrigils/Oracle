@@ -27,17 +27,11 @@ class InvestmentTransaction(Base):
     __tablename__ = "investment_transaction"
 
     household_id: Mapped[int] = mapped_column(Integer, ForeignKey("household.id"))
-    household: Mapped[Household] = relationship(
-        "Household", back_populates="investment_transactions"
-    )
+    household: Mapped[Household] = relationship("Household", back_populates="investment_transactions")
     member_id: Mapped[int] = mapped_column(Integer, ForeignKey("member.id"))
-    member: Mapped[Member] = relationship(
-        "Member", back_populates="investment_transactions"
-    )
+    member: Mapped[Member] = relationship("Member", back_populates="investment_transactions")
     asset_id: Mapped[int] = mapped_column(Integer, ForeignKey("investment_asset.id"))
-    asset: Mapped[InvestmentAsset] = relationship(
-        "InvestmentAsset", back_populates="investment_transactions"
-    )
+    asset: Mapped[InvestmentAsset] = relationship("InvestmentAsset", back_populates="investment_transactions")
     transaction_type: Mapped[TransactionType] = mapped_column(Enum(TransactionType))
     quantity: Mapped[int] = mapped_column(Integer)
     date: Mapped[date] = mapped_column(Date)

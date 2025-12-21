@@ -19,15 +19,7 @@ class Expense(Base):
     amount: Mapped[float] = mapped_column(Float)
     description: Mapped[str] = mapped_column(String)
     date: Mapped[datetime] = mapped_column(DateTime)
-    category_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey("expense_categories.id")
-    )
-    category: Mapped[ExpenseCategory] = relationship(
-        "ExpenseCategory", back_populates="expenses"
-    )
-    monthly_budget_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey("monthly_budgets.id")
-    )
-    monthly_budget: Mapped[MonthlyBudget] = relationship(
-        "MonthlyBudget", back_populates="expenses"
-    )
+    category_id: Mapped[int] = mapped_column(Integer, ForeignKey("expense_categories.id"))
+    category: Mapped[ExpenseCategory] = relationship("ExpenseCategory", back_populates="expenses")
+    monthly_budget_id: Mapped[int] = mapped_column(Integer, ForeignKey("monthly_budgets.id"))
+    monthly_budget: Mapped[MonthlyBudget] = relationship("MonthlyBudget", back_populates="expenses")

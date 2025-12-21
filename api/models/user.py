@@ -19,9 +19,7 @@ class User(Base):
     __tablename__ = "users"
 
     sessions: Mapped[list[Session]] = relationship("Session", back_populates="user")
-    households: Mapped[list[Household]] = relationship(
-        "Household", back_populates="owner"
-    )
+    households: Mapped[list[Household]] = relationship("Household", back_populates="owner")
 
     username: Mapped[str] = mapped_column(String, unique=True, index=True)
     email: Mapped[str] = mapped_column(String, unique=True, index=True)

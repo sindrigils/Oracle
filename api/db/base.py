@@ -49,9 +49,7 @@ def set_short_id_after_insert(mapper, connection, target):
 
         # Update the record with the generated short_id
         connection.execute(
-            mapper.mapped_table.update()
-            .where(mapper.mapped_table.c.id == target.id)
-            .values(short_id=short_id)
+            mapper.mapped_table.update().where(mapper.mapped_table.c.id == target.id).values(short_id=short_id)
         )
 
         # Update the object instance

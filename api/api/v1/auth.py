@@ -58,9 +58,7 @@ async def login(
     password = request.password
     user = user_service.authenticate(identifier, password)
     if not user:
-        raise HTTPException(
-            status_code=HTTP_401_UNAUTHORIZED, detail="Invalid credentials"
-        )
+        raise HTTPException(status_code=HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
 
     user_agent = fastapi_request.headers.get("user-agent", "")
     ip_address = fastapi_request.client.host if fastapi_request.client else ""
@@ -79,9 +77,7 @@ async def register(
     member_service: MemberService = Depends(get_member_service),
 ):
     user = user_service.create_user(request.username, request.email, request.password)
-    household = household_service.create_household(
-        f"{user.username}'s Household", user.id
-    )
+    household = household_service.create_household(f"{user.username}'s Household", user.id)
     member_service.create_member(user.username, household.id)
     return RegisterResponse(success=True)
 
@@ -107,9 +103,7 @@ async def whoami(
     user_response = UserResponse.model_validate(session.user)
     household_response = None
     if session.user.households:
-        household_response = HouseholdResponse.model_validate(
-            session.user.households[0]
-        )
+        household_response = HouseholdResponse.model_validate(session.user.households[0])
 
     return WhoAmIResponse(
         user=user_response,

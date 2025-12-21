@@ -14,11 +14,7 @@ class IncomeService:
 
     def get_by_budget(self, monthly_budget_id: int) -> list[Income]:
         """Get all income entries for a monthly budget."""
-        return (
-            self.db.query(Income)
-            .filter(Income.monthly_budget_id == monthly_budget_id)
-            .all()
-        )
+        return self.db.query(Income).filter(Income.monthly_budget_id == monthly_budget_id).all()
 
     def get_by_id(self, income_id: int) -> Optional[Income]:
         """Get a single income entry by ID."""

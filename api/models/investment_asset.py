@@ -31,9 +31,7 @@ class InvestmentAsset(Base):
     )
 
     household_id: Mapped[int] = mapped_column(Integer, ForeignKey("household.id"))
-    household: Mapped[Household] = relationship(
-        "Household", back_populates="investment_assets"
-    )
+    household: Mapped[Household] = relationship("Household", back_populates="investment_assets")
     member_id: Mapped[int] = mapped_column(Integer, ForeignKey("member.id"))
     member: Mapped[Member] = relationship("Member", back_populates="investment_assets")
     name: Mapped[str] = mapped_column(String)

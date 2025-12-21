@@ -17,15 +17,9 @@ if TYPE_CHECKING:
 
 class Loan(Base):
     __tablename__ = "loan"
-    loan_members: Mapped[list[LoanMember]] = relationship(
-        "LoanMember", back_populates="loan"
-    )
-    loan_payments: Mapped[list[LoanPayment]] = relationship(
-        "LoanPayment", back_populates="loan"
-    )
-    loan_snapshots: Mapped[list[LoanSnapshot]] = relationship(
-        "LoanSnapshot", back_populates="loan"
-    )
+    loan_members: Mapped[list[LoanMember]] = relationship("LoanMember", back_populates="loan")
+    loan_payments: Mapped[list[LoanPayment]] = relationship("LoanPayment", back_populates="loan")
+    loan_snapshots: Mapped[list[LoanSnapshot]] = relationship("LoanSnapshot", back_populates="loan")
 
     household_id: Mapped[int] = mapped_column(Integer, ForeignKey("household.id"))
     household: Mapped[Household] = relationship("Household", back_populates="loans")

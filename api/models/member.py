@@ -17,15 +17,11 @@ if TYPE_CHECKING:
 class Member(Base):
     __tablename__ = "member"
 
-    investment_assets: Mapped[list[InvestmentAsset]] = relationship(
-        "InvestmentAsset", back_populates="member"
-    )
+    investment_assets: Mapped[list[InvestmentAsset]] = relationship("InvestmentAsset", back_populates="member")
     investment_transactions: Mapped[list[InvestmentTransaction]] = relationship(
         "InvestmentTransaction", back_populates="member"
     )
-    loan_members: Mapped[list[LoanMember]] = relationship(
-        "LoanMember", back_populates="member"
-    )
+    loan_members: Mapped[list[LoanMember]] = relationship("LoanMember", back_populates="member")
 
     name: Mapped[str] = mapped_column(String)
     image_url: Mapped[str] = mapped_column(String)

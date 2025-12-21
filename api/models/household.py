@@ -20,15 +20,11 @@ class Household(Base):
     __tablename__ = "household"
 
     members: Mapped[list[Member]] = relationship("Member", back_populates="household")
-    investment_assets: Mapped[list[InvestmentAsset]] = relationship(
-        "InvestmentAsset", back_populates="household"
-    )
+    investment_assets: Mapped[list[InvestmentAsset]] = relationship("InvestmentAsset", back_populates="household")
     investment_transactions: Mapped[list[InvestmentTransaction]] = relationship(
         "InvestmentTransaction", back_populates="household"
     )
-    monthly_budgets: Mapped[list[MonthlyBudget]] = relationship(
-        "MonthlyBudget", back_populates="household"
-    )
+    monthly_budgets: Mapped[list[MonthlyBudget]] = relationship("MonthlyBudget", back_populates="household")
     loans: Mapped[list[Loan]] = relationship("Loan", back_populates="household")
 
     name: Mapped[str] = mapped_column(String)

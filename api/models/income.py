@@ -16,9 +16,5 @@ class Income(Base):
 
     amount: Mapped[float] = mapped_column(Float)
     source: Mapped[str] = mapped_column(String)
-    monthly_budget_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey("monthly_budgets.id")
-    )
-    monthly_budget: Mapped[MonthlyBudget] = relationship(
-        "MonthlyBudget", back_populates="incomes"
-    )
+    monthly_budget_id: Mapped[int] = mapped_column(Integer, ForeignKey("monthly_budgets.id"))
+    monthly_budget: Mapped[MonthlyBudget] = relationship("MonthlyBudget", back_populates="incomes")

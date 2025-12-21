@@ -28,15 +28,11 @@ def get_current_session(
 ) -> SessionModel:
     token = request.cookies.get(settings.session_cookie_name)
     if not token:
-        raise HTTPException(
-            status_code=HTTP_401_UNAUTHORIZED, detail="Not authenticated"
-        )
+        raise HTTPException(status_code=HTTP_401_UNAUTHORIZED, detail="Not authenticated")
 
     session = session_service.get_valid_session(token)
     if not session:
-        raise HTTPException(
-            status_code=HTTP_401_UNAUTHORIZED, detail="Invalid or expired token"
-        )
+        raise HTTPException(status_code=HTTP_401_UNAUTHORIZED, detail="Invalid or expired token")
     return session
 
 

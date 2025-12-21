@@ -16,11 +16,7 @@ class UserService:
         self.db = db
 
     def authenticate(self, identifier: str, password: str) -> Optional[User]:
-        user = (
-            self.db.query(User)
-            .filter(or_(User.username == identifier, User.email == identifier))
-            .first()
-        )
+        user = self.db.query(User).filter(or_(User.username == identifier, User.email == identifier)).first()
         if not user or not user.check_password(password):
             return None
         return user
@@ -31,20 +27,12 @@ class UserService:
         email: EmailStr,
         password: str,
     ) -> User:
-        existing_user = (
-            self.db.query(User)
-            .filter(or_(User.username == username, User.email == email))
-            .first()
-        )
+        existing_user = self.db.query(User).filter(or_(User.username == username, User.email == email)).first()
 
         if existing_user:
             if existing_user.username == username:
-                raise HTTPException(
-                    status_code=HTTP_400_BAD_REQUEST, detail="Username already taken"
-                )
-            raise HTTPException(
-                status_code=HTTP_400_BAD_REQUEST, detail="Email already taken"
-            )
+                raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail="Username already taken")
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail="Email already taken")
         user = User(username=username, email=email)
         user.set_password(password)
         self.db.add(user)

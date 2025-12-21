@@ -32,17 +32,11 @@ class ExpenseCategoryService:
 
     def get_by_id(self, category_id: int) -> Optional[ExpenseCategory]:
         """Get a single category by ID."""
-        return (
-            self.db.query(ExpenseCategory)
-            .filter(ExpenseCategory.id == category_id)
-            .first()
-        )
+        return self.db.query(ExpenseCategory).filter(ExpenseCategory.id == category_id).first()
 
     def _ensure_default_categories(self) -> None:
         """Create default categories if they don't exist, or update existing ones."""
-        existing_defaults = (
-            self.db.query(ExpenseCategory).filter(not ExpenseCategory.is_custom).all()
-        )
+        existing_defaults = self.db.query(ExpenseCategory).filter(not ExpenseCategory.is_custom).all()
 
         # If no default categories exist, create them
         if len(existing_defaults) == 0:
@@ -60,10 +54,7 @@ class ExpenseCategoryService:
             for i, existing_cat in enumerate(existing_defaults):
                 if i < len(DEFAULT_CATEGORIES):
                     new_data = DEFAULT_CATEGORIES[i]
-                    if (
-                        existing_cat.name != new_data["name"]
-                        or existing_cat.color != new_data["color"]
-                    ):
+                    if existing_cat.name != new_data["name"] or existing_cat.color != new_data["color"]:
                         existing_cat.name = new_data["name"]
                         existing_cat.color = new_data["color"]
             self.db.commit()
