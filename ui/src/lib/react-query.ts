@@ -66,7 +66,17 @@ export const queryKeys = {
   investments: {
     all: ['investments'] as const,
     byMember: (memberId: number) =>
-      [...queryKeys.investments.all, memberId] as const,
+      [...queryKeys.investments.all, 'member', memberId] as const,
+    byHousehold: (householdId: number) =>
+      [...queryKeys.investments.all, 'household', householdId] as const,
+    detail: (assetId: number) =>
+      [...queryKeys.investments.all, 'detail', assetId] as const,
+    transactions: (assetId: number) =>
+      [...queryKeys.investments.all, 'transactions', assetId] as const,
+    valuations: (assetId: number) =>
+      [...queryKeys.investments.all, 'valuations', assetId] as const,
+    portfolio: (householdId: number) =>
+      [...queryKeys.investments.all, 'portfolio', householdId] as const,
   },
   loans: {
     all: ['loans'] as const,

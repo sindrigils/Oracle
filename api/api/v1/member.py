@@ -7,6 +7,7 @@ from schemas.member import (
     CreateMemberResponse,
     DeleteMemberResponse,
     GetMembersResponse,
+    MemberResponse,
 )
 from services.member import MemberService, get_member_service
 
@@ -18,7 +19,21 @@ async def get_members(
     household_id: int,
     member_service: MemberService = Depends(get_member_service),
 ):
-    return member_service.get_members(household_id)
+    members = member_service.get_members(household_id)
+    return GetMembersResponse(
+        members=[
+            MemberResponse(
+                id=m.id,
+                name=m.name,
+                image_url=m.image_url,
+                household_id=m.household_id,
+                created_at=m.created_at,
+                updated_at=m.updated_at,
+                is_primary=(i == 0),
+            )
+            for i, m in enumerate(members)
+        ]
+    )
 
 
 @router.post("/", response_model=CreateMemberResponse)

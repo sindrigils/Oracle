@@ -24,6 +24,6 @@ class Member(Base):
     loan_members: Mapped[list[LoanMember]] = relationship("LoanMember", back_populates="member")
 
     name: Mapped[str] = mapped_column(String)
-    image_url: Mapped[str] = mapped_column(String)
+    image_url: Mapped[str | None] = mapped_column(String, nullable=True)
     household_id: Mapped[int] = mapped_column(Integer, ForeignKey("household.id"))
     household: Mapped[Household] = relationship("Household", back_populates="members")

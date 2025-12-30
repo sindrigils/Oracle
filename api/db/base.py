@@ -40,7 +40,7 @@ def generate_short_id(table_name: str, id_value: int) -> str:
     return hash_hex[:7].upper()
 
 
-@event.listens_for(Base, "after_insert")
+@event.listens_for(Base, "after_insert", propagate=True)
 def set_short_id_after_insert(mapper, connection, target):
     """Set the short_id after the record is inserted and has an ID"""
     if not target.short_id and target.id:
